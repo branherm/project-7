@@ -1,0 +1,98 @@
+1. Introduction
+This document justifies the choice of data structures used in the text analysis program. The program reads a text file, processes the words, and performs two main tasks:
+
+Generating an alphabetical list of all words (including duplicates)
+
+Counting word occurrences and sorting them by frequency
+
+The choice of data structures impacts efficiency, readability, and ease of implementation. Below, I analyze the requirements and justify the selected structures.
+
+2. Data Structures Used
+2.1. First Sequence: Alphabetical Word List (Including Duplicates)
+Data Structure: LinkedList<String>
+
+Why LinkedList?
+Dynamic Size: Unlike arrays, LinkedList grows automatically, which is useful since the number of words is unknown beforehand.
+
+Insertion Efficiency:
+
+The program inserts words in sorted order while reading.
+
+For small datasets (like a 2000-word essay), the O(n) insertion time per word is acceptable.
+
+If performance were critical, a TreeSet (for uniqueness) or Collections.sort() (after bulk insertion) could be better.
+
+Simplicity: Easy to implement for this use case.
+
+Alternative Considerations:
+ArrayList: Faster random access, but slower for mid-list insertions.
+
+TreeSet: Automatically sorts but does not allow duplicates.
+
+Conclusion: LinkedList was chosen for its simplicity and dynamic growth, though it is not the most efficient for large-scale sorting.
+
+2.2. Second Sequence: Word Counts (Sorted by Frequency)
+Data Structure: LinkedList<secondSequence> (Custom class storing word + count)
+
+Why LinkedList?
+Flexibility: Stores objects with word-count pairs.
+
+Manual Sorting:
+
+The program sorts words alphabetically first (for consistency).
+
+Missing Requirement: The final output should be sorted by frequency (descending), but the current implementation only sorts alphabetically.
+
+Fix: Implement Comparable<secondSequence> and use Collections.sort().
+
+Better Alternatives:
+HashMap + Sorting (More Efficient Approach):
+
+Step 1: Use HashMap<String, Integer> for O(1) word-count lookups.
+
+Step 2: Convert to a List<Entry<String, Integer>> and sort by value (count).
+
+Advantage: Faster counting (~O(n)) and cleaner sorting.
+
+TreeMap (If Alphabetical Order Was Primary):
+
+Automatically sorts keys (words) alphabetically.
+
+But does not help with sorting by frequency.
+
+Conclusion:
+
+The current LinkedList approach works but is inefficient for large datasets.
+
+Recommended Improvement:
+
+Use HashMap for counting → O(n) time.
+
+Convert to a list and sort by frequency → O(n log n) time.
+
+3. User Search Functionality
+Implementation: Linear search through LinkedList<secondSequence>
+
+Why Linear Search?
+Simple to implement.
+
+Works for small datasets (2000 words).
+
+Better Alternative:
+If using HashMap for counting, word lookups would be O(1) instead of O(n).
+
+4. Final Recommendations for Optimization
+Requirement	Current Approach	Optimized Approach
+Store all words	LinkedList<String>	ArrayList + Collections.sort()
+Count word frequencies	LinkedList<secondSequence>	HashMap<String, Integer> → Convert to List & sort
+Sort by frequency	Manual (alphabetical only)	Implement Comparable + Collections.sort()
+Word lookup	Linear search (O(n))	HashMap (O(1))
+Why These Changes?
+HashMap is optimal for counting word frequencies.
+
+ArrayList + Collections.sort() is better for large-scale sorting.
+
+Comparable Interface allows flexible sorting (by word or count).
+
+5. Conclusion
+The current implementation meets the basic requirements but has inefficiencies. The choice of LinkedList was reasonable for simplicity but not optimal for large datasets.
